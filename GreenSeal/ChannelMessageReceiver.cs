@@ -1,6 +1,6 @@
 ﻿using System.Threading.Channels;
 
-namespace EventBus;
+namespace GreenSeal;
 
 public class ChannelMessageReceiver<T> : IMessageReceiver<T> where T : notnull
 {
@@ -14,10 +14,10 @@ public class ChannelMessageReceiver<T> : IMessageReceiver<T> where T : notnull
             SingleReader = true,
         });
 
-        _runner = Run(_channel.Reader, ct, handlers);
+        _runner = Run(_channel.Reader, handlers, ct);
     }
 
-    private static async Task Run(ChannelReader<T> reader, CancellationToken ct, IMessageHandler<T>[] handlers)
+    private static async Task Run(ChannelReader<T> reader, IMessageHandler<T>[] handlers, CancellationToken ct)
     {
         await foreach (T data in reader.ReadAllAsync().WithCancellation(ct))
         {

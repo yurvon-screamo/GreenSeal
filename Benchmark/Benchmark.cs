@@ -1,10 +1,12 @@
 ﻿using BenchmarkDotNet.Attributes;
 
+using GreenSeal;
+
 using MediatR;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EventBus;
+namespace Benchmark;
 
 public readonly record struct Data(string Data1, string Data2) : INotification;
 
@@ -20,14 +22,14 @@ public class HandlerData2 : IMessageHandler<Data>, INotificationHandler<Data>
 
 [MemoryDiagnoser]
 [SimpleJob]
-public class Benchmark : BenchmarkEmptyMessage
+public class BenchmarkRunner : BenchmarkEmptyMessage
 {
     private const int CountRun = 100000;
     private const string Value = "QWERTY123";
 
     private readonly ServiceProvider _structs;
 
-    public Benchmark()
+    public BenchmarkRunner()
     {
         ServiceCollection collection = new();
         collection.AddSingleton<INotificationHandler<Data>, HandlerData>();

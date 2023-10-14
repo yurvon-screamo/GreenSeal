@@ -1,4 +1,4 @@
-﻿namespace EventBus;
+﻿namespace GreenSeal;
 
 public interface IMessageHandler<in T> where T : notnull
 {

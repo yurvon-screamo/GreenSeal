@@ -1,10 +1,12 @@
 ﻿using BenchmarkDotNet.Attributes;
 
+using GreenSeal;
+
 using MediatR;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EventBus;
+namespace Benchmark;
 
 public readonly record struct Ping : INotification;
 

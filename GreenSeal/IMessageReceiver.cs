@@ -1,4 +1,4 @@
-﻿namespace EventBus;
+﻿namespace GreenSeal;
 
 public interface IMessageReceiver<in TMessage> where TMessage : notnull
 {
