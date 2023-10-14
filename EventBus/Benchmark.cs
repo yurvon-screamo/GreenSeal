@@ -20,7 +20,7 @@ public class HandlerData2 : IMessageHandler<Data>, INotificationHandler<Data>
 
 [MemoryDiagnoser]
 [SimpleJob]
-public class Benchmark
+public class Benchmark : BenchmarkEmptyMessage
 {
     private const int CountRun = 100000;
     private const string Value = "QWERTY123";
@@ -36,7 +36,7 @@ public class Benchmark
     }
 
     [Benchmark]
-    public async Task SimpleInvoker()
+    public async Task NativeTaskInvoker()
     {
         IMessageHandler<Data>[] handlers = new IMessageHandler<Data>[]
         {
@@ -67,7 +67,7 @@ public class Benchmark
     }
 
     [Benchmark]
-    public async Task ChannelsReceiver()
+    public async Task GreenSealPublisher()
     {
         ChannelMessageReceiver<Data> channelsQueue = new(default, new HandlerData(), new HandlerData2());
 
@@ -80,7 +80,7 @@ public class Benchmark
     }
 
     [Benchmark]
-    public async Task MediatorReceiver()
+    public async Task MediatRPublisher()
     {
         Mediator mediator = new(_structs);
 
