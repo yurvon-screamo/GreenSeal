@@ -4,13 +4,8 @@ A simple implementation IPublisher, like in a mediator, is only simpler, dumber 
 
 ## Benchmarks
 
-```
-BenchmarkDotNet v0.13.9+228a464e8be6c580ad9408e98f18813f6407fb5a, Windows 11 (10.0.22621.2134/22H2/2022Update/SunValley2)
-12th Gen Intel Core i5-1240P, 1 CPU, 16 logical and 12 physical cores
-.NET SDK 7.0.400
-  [Host]     : .NET 7.0.10 (7.0.1023.36312), X64 RyuJIT AVX2
-  DefaultJob : .NET 7.0.10 (7.0.1023.36312), X64 RyuJIT AVX2
-```
+* 12th Gen Intel Core i5-1240P, 1 CPU, 16 logical and 12 physical cores
+* .NET SDK 7.0.400
 
 | Method           | Mean      | Error     | StdDev    | Gen0      | Gen1     | Gen2     | Allocated |
 |----------------- |----------:|----------:|----------:|----------:|---------:|---------:|----------:|
