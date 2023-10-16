@@ -2,14 +2,14 @@
 
 namespace GreenSeal;
 
-public class ChannelMessageReceiver<T> : IMessageReceiver<T> where T : notnull
+public class ChannelMessageReceiver<TMessage> : IMessageReceiver<TMessage> where TMessage : notnull
 {
-    private readonly Channel<T> _channel;
+    private readonly Channel<TMessage> _channel;
     private readonly Task _runner;
 
-    public ChannelMessageReceiver(CancellationToken ct, params IMessageHandler<T>[] handlers)
+    public ChannelMessageReceiver(CancellationToken ct, params IMessageHandler<TMessage>[] handlers)
     {
-        _channel = Channel.CreateUnbounded<T>(new()
+        _channel = Channel.CreateUnbounded<TMessage>(new()
         {
             SingleReader = true,
         });
@@ -17,20 +17,30 @@ public class ChannelMessageReceiver<T> : IMessageReceiver<T> where T : notnull
         _runner = Run(_channel.Reader, handlers, ct);
     }
 
-    private static async Task Run(ChannelReader<T> reader, IMessageHandler<T>[] handlers, CancellationToken ct)
+    private static async Task Run(ChannelReader<TMessage> reader, IMessageHandler<TMessage>[] handlers, CancellationToken ct)
     {
-        await foreach (T data in reader.ReadAllAsync().WithCancellation(ct))
+        await foreach (TMessage data in reader.ReadAllAsync(ct))
         {
-            foreach (IMessageHandler<T> h in handlers)
+            foreach (IMessageHandler<TMessage> h in handlers)
             {
                 await h.Handle(data, ct);
             }
         }
     }
 
-    public void Publish(T data)
+    public Type GetReceiverType()
+    {
+        return typeof(TMessage);
+    }
+
+    public void Publish(TMessage data)
     {
         _channel.Writer.TryWrite(data);
+    }
+
+    public void Publish(object data)
+    {
+        Publish((TMessage)data);
     }
 
     public async ValueTask StopAsync()

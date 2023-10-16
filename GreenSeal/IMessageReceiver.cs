@@ -1,8 +1,15 @@
 ﻿namespace GreenSeal;
 
-public interface IMessageReceiver<in TMessage> where TMessage : notnull
+public interface IMessageReceiver
 {
-    void Publish(TMessage data);
+    Type GetReceiverType();
+
+    void Publish(object data);
 
     ValueTask StopAsync();
+}
+
+public interface IMessageReceiver<in TMessage> : IMessageReceiver where TMessage : notnull
+{
+    void Publish(TMessage data);
 }
