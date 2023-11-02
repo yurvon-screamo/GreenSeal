@@ -71,14 +71,19 @@ public class BenchmarkRunner : BenchmarkEmptyMessage
     [Benchmark]
     public async Task GreenSealPublisher()
     {
-        ChannelMessageReceiver<Data> channelsQueue = new(default, new HandlerData(), new HandlerData2());
+        ChannelMessageReceiver<Data> channelsQueue = new(new IMessageHandler<Data>[] { new HandlerData(), new HandlerData2() });
+
+        ChannelGreenSeal greenSeal = new(new IMessageReceiver[]
+        {
+            channelsQueue,
+        });
 
         for (int i = 0; i < CountRun; i++)
         {
-            channelsQueue.Publish(new(Value, Value));
+            greenSeal.Publish(new Data(Value, Value));
         }
 
-        await channelsQueue.StopAsync();
+        await greenSeal.StopAsync();
     }
 
     [Benchmark]

@@ -63,14 +63,17 @@ public class BenchmarkEmptyMessage
     [Benchmark]
     public async Task GreenSealPublisherWithEmptyMessage()
     {
-        ChannelMessageReceiver<Ping> channelsQueue = new(default, new EmptyHandler());
+        ChannelGreenSeal channelGreenSeal = new(new IMessageReceiver[]
+        {
+            new ChannelMessageReceiver<Ping>(new IMessageHandler<Ping>[] { new EmptyHandler() })
+        });
 
         for (int i = 0; i < CountRun; i++)
         {
-            channelsQueue.Publish(new());
+            channelGreenSeal.Publish(new Ping());
         }
 
-        await channelsQueue.StopAsync();
+        await channelGreenSeal.StopAsync();
     }
 
     [Benchmark]
