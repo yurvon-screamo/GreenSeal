@@ -1,3 +1,5 @@
 ﻿using BenchmarkDotNet.Running;
 
-BenchmarkRunner.Run<Benchmark.BenchmarkRunner>();
+using Mediator.Benchmarks.Notification;
+
+BenchmarkRunner.Run<NotificationBenchmarks>();

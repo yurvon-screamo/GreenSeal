@@ -79,7 +79,7 @@ public class BenchmarkEmptyMessage
     [Benchmark]
     public async Task MediatRPublisherWithEmptyMessage()
     {
-        Mediator mediator = new(_structs);
+        MediatR.Mediator mediator = new(_structs);
 
         for (int i = 0; i < CountRun; i++)
         {

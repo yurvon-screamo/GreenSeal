@@ -12,7 +12,7 @@ public static class DependencyInjectionExtension
         where TMessage : notnull
     {
         services.TryAddSingleton<IMessageReceiver, ChannelMessageReceiver<TMessage>>();
-        
+
         services.AddSingleton<IMessageHandler<TMessage>, THandler>();
 
         return services;
