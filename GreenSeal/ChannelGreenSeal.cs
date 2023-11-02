@@ -9,7 +9,7 @@ public class ChannelGreenSeal : IGreenSeal
     public ChannelGreenSeal(IEnumerable<IMessageReceiver> receivers)
     {
         _receiversMap = receivers.ToImmutableDictionary(
-            c => c.GetReceiverType(), 
+            c => c.GetReceiverType(),
             c => c);
     }
 
@@ -18,5 +18,18 @@ public class ChannelGreenSeal : IGreenSeal
         IMessageReceiver<TMessage> receiver = (IMessageReceiver<TMessage>)_receiversMap[typeof(TMessage)];
 
         receiver.Publish(message);
+    }
+
+    public async ValueTask StopAsync()
+    {
+        foreach (KeyValuePair<Type, IMessageReceiver> item in _receiversMap)
+        {
+            await item.Value.StopAsync();
+        }
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        return StopAsync();
     }
 }

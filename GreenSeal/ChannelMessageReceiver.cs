@@ -7,17 +7,18 @@ public class ChannelMessageReceiver<TMessage> : IMessageReceiver<TMessage> where
     private readonly Channel<TMessage> _channel;
     private readonly Task _runner;
 
-    public ChannelMessageReceiver(CancellationToken ct, params IMessageHandler<TMessage>[] handlers)
+    public ChannelMessageReceiver(IEnumerable<IMessageHandler<TMessage>> handlers)
     {
         _channel = Channel.CreateUnbounded<TMessage>(new()
         {
             SingleReader = true,
         });
 
-        _runner = Run(_channel.Reader, handlers, ct);
+        //TODO: add ct
+        _runner = Run(_channel.Reader, handlers, default);
     }
 
-    private static async Task Run(ChannelReader<TMessage> reader, IMessageHandler<TMessage>[] handlers, CancellationToken ct)
+    private static async Task Run(ChannelReader<TMessage> reader, IEnumerable<IMessageHandler<TMessage>> handlers, CancellationToken ct)
     {
         await foreach (TMessage data in reader.ReadAllAsync(ct))
         {
