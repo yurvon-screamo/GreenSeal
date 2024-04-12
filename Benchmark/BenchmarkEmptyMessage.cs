@@ -1,7 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
-
-using GreenSeal;
-
+using GreenSeal.Receivers.Interfaces;
 using MediatR;
 
 using Microsoft.Extensions.DependencyInjection;

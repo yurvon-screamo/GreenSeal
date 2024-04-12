@@ -1,6 +1,16 @@
 ﻿namespace GreenSeal;
 
-public interface IMessageHandler<in T> where T : notnull
+/// <summary>
+/// Event handler
+/// </summary>
+/// <typeparam name="TMessage">Message type</typeparam>
+public interface IMessageHandler<in TMessage> where TMessage : notnull
 {
-    Task Handle(T data, CancellationToken ct);
+    /// <summary>
+    /// Handle event
+    /// </summary>
+    /// <param name="data">Event body</param>
+    /// <param name="ct">Handle cancelation token</param>
+    /// <returns></returns>
+    ValueTask Handle(TMessage data, CancellationToken ct);
 }

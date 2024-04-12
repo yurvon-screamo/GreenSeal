@@ -1,10 +1,6 @@
-﻿using Benchmark;
-
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
-
-using GreenSeal;
-
+using GreenSeal.Receivers.Interfaces;
 using MediatR;
 
 using MessagePipe;
@@ -18,7 +14,7 @@ public sealed record SomeNotification(Guid Id) : INotification;
 public sealed class SomeHandlerClass
     : INotificationHandler<SomeNotification>,
       IAsyncMessageHandler<SomeNotification>,
-      GreenSeal.IMessageHandler<SomeNotification>
+      GreenSeal.Receivers.Interfaces.IMessageHandler<SomeNotification>
 {
     public Task Handle(SomeNotification data, CancellationToken ct) => Task.CompletedTask;
 
@@ -65,7 +61,7 @@ public class NotificationBenchmarks
 
         _greenSeal= new ChannelGreenSeal(new IMessageReceiver[]
         {
-            new ChannelMessageReceiver<SomeNotification>(new GreenSeal.IMessageHandler<SomeNotification>[] { new SomeHandlerClass() })
+            new ChannelMessageReceiver<SomeNotification>(new GreenSeal.Receivers.Interfaces.IMessageHandler<SomeNotification>[] { new SomeHandlerClass() })
         });
 
         _mediatr = _serviceProvider.GetRequiredService<IMediator>();
