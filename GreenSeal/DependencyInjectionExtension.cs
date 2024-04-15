@@ -1,7 +1,7 @@
 ﻿using GreenSeal.Receivers;
 using GreenSeal.Receivers.Interfaces;
+
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using System.Diagnostics.CodeAnalysis;
 
@@ -19,12 +19,10 @@ public static class DependencyInjectionExtension
     /// <typeparam name="TMessage">Message type</typeparam>
     /// <param name="services"></param>
     /// <returns></returns>
-    public static IServiceCollection AddTransientMessageHandler<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] THandler, TMessage>(this IServiceCollection services)
+    public static IServiceCollection AddMessageHandler<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] THandler, TMessage>(this IServiceCollection services)
         where THandler : class, IMessageHandler<TMessage>
         where TMessage : notnull
     {
-        services.TryAddSingleton<IMessageReceiver, TransientChannelMessageReceiver<TMessage>>();
-
         services.AddTransient<IMessageHandler<TMessage>, THandler>();
 
         return services;
@@ -41,9 +39,35 @@ public static class DependencyInjectionExtension
         where THandler : class, IMessageHandler<TMessage>
         where TMessage : notnull
     {
-        services.TryAddSingleton<IMessageReceiver, SingletonChannelMessageReceiver<TMessage>>();
-
         services.AddSingleton<IMessageHandler<TMessage>, THandler>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Register event to green seal
+    /// </summary>
+    /// <typeparam name="TMessage">Event type</typeparam>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddEventReceiver<TMessage>(this  IServiceCollection services)
+        where TMessage : notnull
+    {
+        services.AddSingleton<IMessageReceiver, TransientChannelMessageReceiver<TMessage>>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Register event as singleton subscriber (only Singleton handler) to green seal
+    /// </summary>
+    /// <typeparam name="TMessage">Event type</typeparam>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddSingletonEventReceiver<TMessage>(this  IServiceCollection services)
+        where TMessage : notnull
+    {
+        services.AddSingleton<IMessageReceiver, SingletonChannelMessageReceiver<TMessage>>();
 
         return services;
     }

@@ -7,12 +7,10 @@ namespace GreenSeal.Receivers;
 internal class TransientChannelMessageReceiver<TMessage> : IMessageReceiver<TMessage> where TMessage : notnull
 {
     private readonly IServiceScopeFactory _scopeFactory;
-    private readonly IEnumerable<IMessageHandler<TMessage>> _handlers;
 
-    public TransientChannelMessageReceiver(IServiceScopeFactory scopeFactory, IEnumerable<IMessageHandler<TMessage>> handlers)
+    public TransientChannelMessageReceiver(IServiceScopeFactory scopeFactory)
     {
         _scopeFactory = scopeFactory;
-        _handlers = handlers;
     }
 
     public Type GetReceiverType()

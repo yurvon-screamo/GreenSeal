@@ -7,8 +7,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddGreenSeal();
+
+builder.Services.AddEventReceiver<Ping>();
+
 builder.Services.AddSingletonMessageHandler<SampleHandler, Ping>();
-builder.Services.AddTransientMessageHandler<SampleHandler2, Ping>();
+builder.Services.AddMessageHandler<SampleHandler2, Ping>();
 
 WebApplication app = builder.Build();
 

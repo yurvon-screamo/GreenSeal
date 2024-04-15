@@ -7,20 +7,20 @@ A simple implementation IPublisher, like in a mediator, is only simpler, dumber,
 1. Install:
 
 ```csharp
-    <PackageReference Include="GreenSeal" Version="0.0.1" />
+    <PackageReference Include="GreenSeal" Version="0.0.2" />
 ```
 
 2. Add to DI IGreenSeal publisher:
 
 ```csharp
 builder.Services.AddGreenSeal();
-builder.Services.AddSingletonMessageHandler<SampleHandler, Ping>();
 ```
 
 3. Define event body:
 
 ```csharp
 public readonly record struct Ping;
+public readonly record struct SingleBar;
 ```
 
 4. Implement event handler(s):
@@ -40,16 +40,19 @@ public class SampleHandler : IMessageHandler<Ping>
 
 public class SampleHandler2 : IMessageHandler<Ping> ...
 
-public class SampleHandler3 : IMessageHandler<Ping> ...
+public class SampleHandler3 : IMessageHandler<SingleBar> ...
 
 ```
 
-5. Add handler(s) to DI:
+5. Add handlers and receivers to DI. Use `AddSingletonEventReceiver` if all handlers has singleton lifetime, other use `AddEventReceiver`.
 
 ```csharp
+builder.Services.AddEventReceiver<Ping>();
 builder.Services.AddSingletonMessageHandler<SampleHandler, Ping>();
 builder.Services.AddTransientMessageHandler<SampleHandler2, Ping>();
-builder.Services.AddTransientMessageHandler<SampleHandler3, Ping>();
+
+builder.Services.AddSingletonEventReceiver<SingleBar>();
+builder.Services.AddSingletonMessageHandler<SampleHandler3, SingleBar>();
 ```
 
 6. Use!
