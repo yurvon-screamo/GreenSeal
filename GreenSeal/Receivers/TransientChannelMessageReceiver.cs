@@ -4,7 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenSeal.Receivers;
 
-internal class TransientChannelMessageReceiver<TMessage> : IMessageReceiver<TMessage> where TMessage : notnull
+internal class TransientChannelMessageReceiver<TMessage> : IMessageReceiver
+    where TMessage : notnull
 {
     private readonly IServiceScopeFactory _scopeFactory;
 
@@ -18,8 +19,13 @@ internal class TransientChannelMessageReceiver<TMessage> : IMessageReceiver<TMes
         return typeof(TMessage);
     }
 
-    public async ValueTask PublishAsync(TMessage data, CancellationToken ct)
+    public async ValueTask PublishAsync(object data, CancellationToken ct)
     {
+        if (data is not TMessage message)
+        {
+            return;
+        }
+
         using IServiceScope scope = _scopeFactory.CreateScope();
 
         IEnumerable<IMessageHandler<TMessage>> handlers = scope.ServiceProvider
@@ -27,7 +33,7 @@ internal class TransientChannelMessageReceiver<TMessage> : IMessageReceiver<TMes
 
         foreach (IMessageHandler<TMessage> handler in handlers)
         {
-            await handler.Handle(data, ct);
+            await handler.Handle(message, ct);
         }
     }
 }

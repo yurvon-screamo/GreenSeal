@@ -10,14 +10,12 @@ internal class GreenSeal : IGreenSeal
 
     public GreenSeal(IEnumerable<IMessageReceiver> receivers)
     {
-        _receiversMap = receivers.ToFrozenDictionary(
-            c => c.GetReceiverType(),
-            c => c);
+        _receiversMap = receivers.ToFrozenDictionary(c => c.GetReceiverType());
     }
 
     public ValueTask Publish<TMessage>(TMessage message, CancellationToken ct) where TMessage : notnull
     {
-        IMessageReceiver<TMessage> receiver = (IMessageReceiver<TMessage>)_receiversMap[message.GetType()];
+        IMessageReceiver receiver = _receiversMap[message.GetType()];
 
         return receiver.PublishAsync(message, ct);
     }

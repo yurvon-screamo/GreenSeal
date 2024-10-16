@@ -46,8 +46,7 @@ public static class DependencyInjectionExtension
     /// <summary>
     /// Register event to green seal
     /// </summary>
-    public static IServiceCollection AddEventReceiver<TMessage>(this IServiceCollection services)
-        where TMessage : notnull
+    public static IServiceCollection AddEventReceiver<TMessage>(this IServiceCollection services) where TMessage : notnull
     {
         services.AddSingleton<IMessageReceiver, TransientChannelMessageReceiver<TMessage>>();
 

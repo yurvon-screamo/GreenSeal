@@ -2,7 +2,7 @@
 
 namespace GreenSeal.Receivers;
 
-internal class SingletonChannelMessageReceiver<TMessage> : IMessageReceiver<TMessage>
+internal class SingletonChannelMessageReceiver<TMessage> : IMessageReceiver
     where TMessage : notnull
 {
     private readonly IEnumerable<IMessageHandler<TMessage>> _handlers;
@@ -17,11 +17,16 @@ internal class SingletonChannelMessageReceiver<TMessage> : IMessageReceiver<TMes
         return typeof(TMessage);
     }
 
-    public async ValueTask PublishAsync(TMessage data, CancellationToken ct)
+    public async ValueTask PublishAsync(object data, CancellationToken ct)
     {
+        if (data is not TMessage message)
+        {
+            return;
+        }
+
         foreach (IMessageHandler<TMessage> handler in _handlers)
         {
-            await handler.Handle(data, ct);
+            await handler.Handle(message, ct);
         }
     }
 }
