@@ -6,7 +6,7 @@
 	  <Nullable>enable</Nullable>
 	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
 	  <IsAotCompatible>true</IsAotCompatible>
-	  <Version>0.0.4</Version>
+	  <Version>0.0.5</Version>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <Description>A simple implementation IPublisher, like in a mediator, is only simpler, dumber, faster and AOT ready.</Description>
 	  <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
