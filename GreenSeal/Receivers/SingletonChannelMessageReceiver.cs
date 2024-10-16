@@ -2,8 +2,8 @@
 
 namespace GreenSeal.Receivers;
 
-internal class SingletonChannelMessageReceiver<TMessage> :
-    IMessageReceiver<TMessage> where TMessage : notnull
+internal class SingletonChannelMessageReceiver<TMessage> : IMessageReceiver<TMessage>
+    where TMessage : notnull
 {
     private readonly IEnumerable<IMessageHandler<TMessage>> _handlers;
 

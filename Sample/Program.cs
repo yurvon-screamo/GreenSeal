@@ -11,7 +11,7 @@ builder.Services.AddGreenSeal();
 builder.Services.AddEventReceiver<Ping>();
 
 builder.Services.AddSingletonMessageHandler<SampleHandler, Ping>();
-builder.Services.AddMessageHandler<SampleHandler2, Ping>();
+builder.Services.AddTransientMessageHandler<SampleHandler2, Ping>();
 
 WebApplication app = builder.Build();
 
@@ -49,7 +49,7 @@ public class SampleHandler2 : IMessageHandler<Ping>
 public class Example
 {
     private readonly IGreenSeal _greenSeal;
-    
+
     public Example(IGreenSeal greenSeal)
     {
         _greenSeal = greenSeal;
@@ -59,7 +59,7 @@ public class Example
     {
         /// ... work
 
-         await _greenSeal.Publish(new Ping(), ct);
+        await _greenSeal.Publish(new Ping(), ct);
 
         /// ... more work
     }

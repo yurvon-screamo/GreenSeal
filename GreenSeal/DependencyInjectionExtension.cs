@@ -15,15 +15,18 @@ public static class DependencyInjectionExtension
     /// <summary>
     /// Add event handler with transient life time
     /// </summary>
-    /// <typeparam name="THandler">Handler type</typeparam>
-    /// <typeparam name="TMessage">Message type</typeparam>
-    /// <param name="services"></param>
-    /// <returns></returns>
-    public static IServiceCollection AddMessageHandler<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] THandler, TMessage>(this IServiceCollection services)
-        where THandler : class, IMessageHandler<TMessage>
-        where TMessage : notnull
+    public static IServiceCollection AddTransientMessageHandler<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] THandler, TMessage>(this IServiceCollection services) where THandler : class, IMessageHandler<TMessage> where TMessage : notnull
     {
         services.AddTransient<IMessageHandler<TMessage>, THandler>();
+        return services;
+    }
+
+    /// <summary>
+    /// Add event handler with scoped life time
+    /// </summary>
+    public static IServiceCollection AddScopedMessageHandler<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] THandler, TMessage>(this IServiceCollection services) where THandler : class, IMessageHandler<TMessage> where TMessage : notnull
+    {
+        services.AddScoped<IMessageHandler<TMessage>, THandler>();
 
         return services;
     }
@@ -31,10 +34,6 @@ public static class DependencyInjectionExtension
     /// <summary>
     /// Add event handler with singleton life time
     /// </summary>
-    /// <typeparam name="THandler">Handler type</typeparam>
-    /// <typeparam name="TMessage">Message type</typeparam>
-    /// <param name="services"></param>
-    /// <returns></returns>
     public static IServiceCollection AddSingletonMessageHandler<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] THandler, TMessage>(this IServiceCollection services)
         where THandler : class, IMessageHandler<TMessage>
         where TMessage : notnull
@@ -47,10 +46,7 @@ public static class DependencyInjectionExtension
     /// <summary>
     /// Register event to green seal
     /// </summary>
-    /// <typeparam name="TMessage">Event type</typeparam>
-    /// <param name="services"></param>
-    /// <returns></returns>
-    public static IServiceCollection AddEventReceiver<TMessage>(this  IServiceCollection services)
+    public static IServiceCollection AddEventReceiver<TMessage>(this IServiceCollection services)
         where TMessage : notnull
     {
         services.AddSingleton<IMessageReceiver, TransientChannelMessageReceiver<TMessage>>();
@@ -59,12 +55,18 @@ public static class DependencyInjectionExtension
     }
 
     /// <summary>
+    /// Register event to green seal as scoped
+    /// </summary>
+    public static IServiceCollection AddScopedEventReceiver<TMessage>(this IServiceCollection services) where TMessage : notnull
+    {
+        services.AddScoped<IMessageReceiver, ScopedChannelMessageReceiver<TMessage>>();
+        return services;
+    }
+
+    /// <summary>
     /// Register event as singleton subscriber (only Singleton handler) to green seal
     /// </summary>
-    /// <typeparam name="TMessage">Event type</typeparam>
-    /// <param name="services"></param>
-    /// <returns></returns>
-    public static IServiceCollection AddSingletonEventReceiver<TMessage>(this  IServiceCollection services)
+    public static IServiceCollection AddSingletonEventReceiver<TMessage>(this IServiceCollection services)
         where TMessage : notnull
     {
         services.AddSingleton<IMessageReceiver, SingletonChannelMessageReceiver<TMessage>>();
@@ -75,11 +77,19 @@ public static class DependencyInjectionExtension
     /// <summary>
     /// Add IGreenSeal implementation
     /// </summary>
-    /// <param name="services"></param>
-    /// <returns></returns>
     public static IServiceCollection AddGreenSeal(this IServiceCollection services)
     {
         services.AddSingleton<IGreenSeal, Receivers.GreenSeal>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Add IGreenSeal implementation as scoped
+    /// </summary>
+    public static IServiceCollection AddScopedGreenSeal(this IServiceCollection services)
+    {
+        services.AddScoped<IGreenSeal, Receivers.GreenSeal>();
 
         return services;
     }
