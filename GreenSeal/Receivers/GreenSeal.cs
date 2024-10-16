@@ -17,7 +17,7 @@ internal class GreenSeal : IGreenSeal
 
     public ValueTask Publish<TMessage>(TMessage message, CancellationToken ct) where TMessage : notnull
     {
-        IMessageReceiver<TMessage> receiver = (IMessageReceiver<TMessage>)_receiversMap[typeof(TMessage)];
+        IMessageReceiver<TMessage> receiver = (IMessageReceiver<TMessage>)_receiversMap[message.GetType()];
 
         return receiver.PublishAsync(message, ct);
     }
