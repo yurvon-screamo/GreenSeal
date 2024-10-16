@@ -7,7 +7,7 @@ A simple implementation IPublisher, like in a mediator, is only simpler, dumber,
 1. Install:
 
 ```csharp
-    <PackageReference Include="GreenSeal" Version="0.0.2" />
+    <PackageReference Include="GreenSeal" Version="0.0.5" />
 ```
 
 2. Add to DI IGreenSeal publisher:
